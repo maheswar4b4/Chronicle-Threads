@@ -19,9 +19,6 @@
 package net.openhft.chronicle.threads;
 
 import net.openhft.chronicle.core.Jvm;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.concurrent.TimeUnit;
 
 /*
  * Created by peter.lawrey on 2/11/2017.
@@ -52,16 +49,6 @@ public class YieldingPauser implements Pauser {
 
     @Override
     public void pause() {
-        ++count;
-        if (count < minBusy) {
-            Jvm.safepoint();
-            return;
-        }
-        yield();
-    }
-
-    @Override
-    public void pause(long timeout, @NotNull TimeUnit timeUnit) {
         ++count;
         if (count < minBusy) {
             Jvm.safepoint();

@@ -40,7 +40,7 @@ public interface Pauser {
         return false;
     }
 
-    static Pauser sleepy() {
+    static TimingPauser sleepy() {
         return new LongPauser(0, 100, 500, 20_000, TimeUnit.MICROSECONDS);
     }
 
@@ -105,11 +105,19 @@ public interface Pauser {
         return SLEEPY ? sleepy() : BusyPauser.INSTANCE;
     }
 
+    @NotNull
+    static TimingPauser timedBusy() {
+        return SLEEPY ? sleepy() : new BusyTimedPauser();
+    }
+
     void reset();
 
     void pause();
 
-    void pause(long timeout, TimeUnit timeUnit) throws TimeoutException;
+    @Deprecated // use TimingPauser.pause instead
+    default void pause(long timeout, TimeUnit timeUnit) throws TimeoutException {
+        throw new UnsupportedOperationException(this + " is not stateful, use a TimingPauser");
+    }
 
     void unpause();
 
